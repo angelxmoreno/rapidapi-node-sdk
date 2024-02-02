@@ -38,6 +38,7 @@
         "node": ">=18"
     },
     "scripts": {
+        "clean": "rm -rf dist node_modules yarn.lock && yarn install",
         "prepare": "husky install",
         "prebuild": "rimraf dist",
         "build": "tsc",
@@ -101,14 +102,28 @@
         ]
     },
     "release-it": {
+        "hooks": {
+            "before:init": [
+                "yarn lint",
+                "yarn test",
+                "yarn build"
+            ]
+        },
         "publishConfig": {
             "registry": "https://registry.npmjs.org"
         },
         "git": {
-            "commitMessage": "chore: release v${version}"
+            "commit": true,
+            "commitMessage": "chore: release v${version}",
+            "tag": true,
+            "push": true
         },
         "github": {
+            "autoGenerate": true,
             "release": true
+        },
+        "npm": {
+            "publish": true
         }
     }
 }
