@@ -59,7 +59,8 @@
     },
     "dependencies": {
         "axios": "^1.6.7",
-        "axios-date-transformer": "^1.0.3"
+        "axios-date-transformer": "^1.0.3",
+        "keyv": "^4.5.4"
     },
     "eslintConfig": {
         "root": true,
