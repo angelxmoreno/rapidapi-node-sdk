@@ -1,6 +1,6 @@
 import { AxiosInstance, CreateAxiosDefaults } from 'axios';
-import Keyv from 'keyv';
 import { addAxiosDateTransformer, createAxiosDateTransformer } from 'axios-date-transformer';
+import Keyv from 'keyv';
 
 interface RapidApiParams {
     rapidApiKey: string;
@@ -18,7 +18,6 @@ export class RapidApi {
     axiosInstance: AxiosInstance;
     cache: Keyv;
 
-
     constructor({ rapidApiKey, rapidApiHost, baseUrl, axiosInstance, axiosConfig, cache }: RapidApiParams) {
         this.rapidApiKey = rapidApiKey;
         this.rapidApiHost = rapidApiHost;
@@ -28,7 +27,7 @@ export class RapidApi {
     }
 
     protected configureAxiosInstance(axiosInstance?: AxiosInstance, axiosConfig?: CreateAxiosDefaults): AxiosInstance {
-        const instance = !!axiosInstance
+        const instance = axiosInstance
             ? addAxiosDateTransformer(axiosInstance)
             : createAxiosDateTransformer(axiosConfig);
 
