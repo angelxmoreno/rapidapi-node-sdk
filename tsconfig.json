@@ -18,6 +18,7 @@
         "noFallthroughCasesInSwitch": true,
         "strictNullChecks": true,
         "allowSyntheticDefaultImports": true,
+        "types": ["jest"],
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"],
