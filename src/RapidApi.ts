@@ -2,13 +2,14 @@ import { AxiosInstance, AxiosRequestConfig, CreateAxiosDefaults, isAxiosError } 
 import { addAxiosDateTransformer, createAxiosDateTransformer } from 'axios-date-transformer';
 import Keyv from 'keyv';
 
-interface RapidApiParams {
+export interface RapidApiParams {
     rapidApiKey: string;
     rapidApiHost: string;
     baseUrl: string;
     axiosConfig?: CreateAxiosDefaults;
     axiosInstance?: AxiosInstance;
     cache?: Keyv;
+    logger?: Logger;
 }
 
 interface CallMethodOptions<Params> {
@@ -19,19 +20,25 @@ interface CallMethodOptions<Params> {
 
 type CallMethodReturn<Response> = { error?: Error; response?: Response };
 
+export interface Logger {
+    info(message: string, data?: Record<string, unknown>): void;
+}
+
 export class RapidApi {
     rapidApiKey: string;
     rapidApiHost: string;
     baseUrl: string;
     axiosInstance: AxiosInstance;
     cache: Keyv;
+    logger?: Logger;
 
-    constructor({ rapidApiKey, rapidApiHost, baseUrl, axiosInstance, axiosConfig, cache }: RapidApiParams) {
+    constructor({ rapidApiKey, rapidApiHost, baseUrl, axiosInstance, axiosConfig, cache, logger }: RapidApiParams) {
         this.rapidApiKey = rapidApiKey;
         this.rapidApiHost = rapidApiHost;
         this.baseUrl = baseUrl;
         this.axiosInstance = this.configureAxiosInstance(axiosInstance, axiosConfig);
         this.cache = this.configureCache(cache);
+        this.logger = logger;
     }
 
     protected configureAxiosInstance(axiosInstance?: AxiosInstance, axiosConfig?: CreateAxiosDefaults): AxiosInstance {
@@ -51,12 +58,27 @@ export class RapidApi {
         return cache || new Keyv();
     }
 
+    protected log(message: string, data?: Record<string, unknown>): void {
+        if (this.logger && data) {
+            this.logger.info(message, data);
+        } else if (this.logger) {
+            this.logger.info(message);
+        }
+    }
+
     protected async handleRequest<Response = unknown>(config: AxiosRequestConfig): Promise<CallMethodReturn<Response>> {
         try {
+            this.log('Making request', { config });
+
             const { data } = await this.axiosInstance.request<Response>(config);
+
+            this.log('Request successful', { response: data });
+
             return { response: data };
         } catch (e) {
             const error: Error = isAxiosError(e) ? (e.response?.data as Error) : (e as Error);
+
+            this.log('Request failed', { error });
 
             return { error };
         }
@@ -72,6 +94,8 @@ export class RapidApi {
             url: uri,
             params,
         };
+
+        this.log(`Calling API with method: ${config.method}, URI: ${config.url}`, { params });
 
         return this.handleRequest<Response>(config);
     }
