@@ -2,6 +2,8 @@ import { AxiosInstance, AxiosRequestConfig, CreateAxiosDefaults, isAxiosError } 
 import { addAxiosDateTransformer, createAxiosDateTransformer } from 'axios-date-transformer';
 import Keyv from 'keyv';
 
+import { cacheKeyFromConfig } from './utils';
+
 export interface RapidApiParams {
     rapidApiKey: string;
     rapidApiHost: string;
@@ -62,15 +64,36 @@ export class RapidApi {
         }
     }
 
+    protected cacheKeyFromConfig(config: AxiosRequestConfig): string {
+        return cacheKeyFromConfig(this.rapidApiKey, config);
+    }
+
     protected async handleRequest<Response = unknown>(config: AxiosRequestConfig): Promise<CallMethodReturn<Response>> {
         try {
             this.log('Making request', { config });
+            let response: Response | undefined;
+            const cacheKey = this.cacheKeyFromConfig(config);
 
-            const { data } = await this.axiosInstance.request<Response>(config);
+            if (this.cache) {
+                response = await this.cache.get(cacheKey);
+                if (response === undefined) {
+                    this.log('Cache miss', { cacheKey });
+                } else {
+                    this.log('Cache hit', { cacheKey });
+                }
+            }
 
-            this.log('Request successful', { response: data });
+            if (!this.cache || response === undefined) {
+                const { data } = await this.axiosInstance.request<Response>(config);
+                response = data;
+            }
 
-            return { response: data };
+            if (this.cache && response !== undefined) {
+                await this.cache.set(cacheKey, response);
+            }
+
+            this.log('Request successful', { response });
+            return { response };
         } catch (e) {
             const error: Error = isAxiosError(e) ? (e.response?.data as Error) : (e as Error);
 
