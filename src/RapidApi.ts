@@ -29,7 +29,7 @@ export class RapidApi {
     rapidApiHost: string;
     baseUrl: string;
     axiosInstance: AxiosInstance;
-    cache: Keyv;
+    cache?: Keyv;
     logger?: Logger;
 
     constructor({ rapidApiKey, rapidApiHost, baseUrl, axiosInstance, axiosConfig, cache, logger }: RapidApiParams) {
@@ -37,7 +37,7 @@ export class RapidApi {
         this.rapidApiHost = rapidApiHost;
         this.baseUrl = baseUrl;
         this.axiosInstance = this.configureAxiosInstance(axiosInstance, axiosConfig);
-        this.cache = this.configureCache(cache);
+        this.cache = cache;
         this.logger = logger;
     }
 
@@ -52,10 +52,6 @@ export class RapidApi {
         instance.defaults.headers.common['Content-Type'] = 'application/json';
 
         return instance;
-    }
-
-    protected configureCache(cache?: Keyv): Keyv {
-        return cache || new Keyv();
     }
 
     protected log(message: string, data?: Record<string, unknown>): void {

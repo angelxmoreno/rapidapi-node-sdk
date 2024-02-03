@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Keyv from 'keyv';
 
 import { RapidApi } from '../src/RapidApi';
 
@@ -46,22 +45,5 @@ describe('RapidApi Constructor', () => {
         expect(rapidApi.axiosInstance.defaults.headers.common['X-RapidAPI-Host']).toEqual('host');
         expect(rapidApi.axiosInstance.defaults.headers.common['X-RapidAPI-Key']).toEqual('key');
         expect(rapidApi.axiosInstance.defaults.headers.common['Content-Type']).toEqual('application/json');
-    });
-
-    it('should always have a cache', () => {
-        const rapidApiWithCache = new RapidApi({
-            rapidApiKey: 'key',
-            rapidApiHost: 'host',
-            baseUrl: 'url',
-            cache: new Keyv(),
-        });
-        expect(rapidApiWithCache.cache).toBeDefined();
-
-        const rapidApiWithoutCache = new RapidApi({
-            rapidApiKey: 'key',
-            rapidApiHost: 'host',
-            baseUrl: 'url',
-        });
-        expect(rapidApiWithoutCache.cache).toBeDefined();
     });
 });
