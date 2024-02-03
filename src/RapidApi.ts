@@ -1,4 +1,4 @@
-import { AxiosInstance, CreateAxiosDefaults } from 'axios';
+import { AxiosInstance, AxiosRequestConfig, CreateAxiosDefaults, isAxiosError } from 'axios';
 import { addAxiosDateTransformer, createAxiosDateTransformer } from 'axios-date-transformer';
 import Keyv from 'keyv';
 
@@ -10,6 +10,14 @@ interface RapidApiParams {
     axiosInstance?: AxiosInstance;
     cache?: Keyv;
 }
+
+interface CallMethodOptions<Params> {
+    method?: 'get' | 'post';
+    uri: string;
+    params?: Params;
+}
+
+type CallMethodReturn<Response> = { error?: Error; response?: Response };
 
 export class RapidApi {
     rapidApiKey: string;
@@ -41,5 +49,30 @@ export class RapidApi {
 
     protected configureCache(cache?: Keyv): Keyv {
         return cache || new Keyv();
+    }
+
+    protected async handleRequest<Response = unknown>(config: AxiosRequestConfig): Promise<CallMethodReturn<Response>> {
+        try {
+            const { data } = await this.axiosInstance.request<Response>(config);
+            return { response: data };
+        } catch (e) {
+            const error: Error = isAxiosError(e) ? (e.response?.data as Error) : (e as Error);
+
+            return { error };
+        }
+    }
+
+    call<Response = unknown, Params = Record<string, unknown>>({
+        method,
+        uri,
+        params,
+    }: CallMethodOptions<Params>): Promise<CallMethodReturn<Response>> {
+        const config: AxiosRequestConfig = {
+            method: method || 'get',
+            url: uri,
+            params,
+        };
+
+        return this.handleRequest<Response>(config);
     }
 }
