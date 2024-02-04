@@ -6,7 +6,7 @@ export const generateHash = (value: unknown): string => {
         return 'undefined';
     }
 
-    if (typeof value === 'object' && value !== null) {
+    if (typeof value === 'object') {
         const sortedValue = sortObjectKeys(value as Record<string, unknown>);
         return murmurhash.v2(JSON.stringify(sortedValue)).toString();
     }

@@ -38,7 +38,7 @@ describe('RapidApi Logging', () => {
             expect(mockLogger.info).toHaveBeenCalledWith('Request failed', { error: errorResponse });
         });
     });
-    describe.skip('compatible loggers', () => {
+    describe('compatible loggers', () => {
         it('should work with pino logger', async () => {
             const logger = pino({
                 name: 'pino-rapid-api',

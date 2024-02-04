@@ -5,24 +5,24 @@ import Keyv from 'keyv';
 import { RapidApi, Logger, RapidApiParams } from '../src/RapidApi';
 
 describe('RapidApi Caching', () => {
+    const mockLogger: Logger = {
+        info: jest.fn(),
+    };
+
     const rapidApiOptions: RapidApiParams = {
         rapidApiKey: 'test-key',
         rapidApiHost: 'test-host',
         baseUrl: 'https://api.test-domain.com',
         cache: new Keyv(),
+        logger: mockLogger,
     };
     const axiosMock = new MockAdapter(axios);
     const uri = '/endpoint';
     const params = { foobar: 'fizzbazz' };
 
-    const mockLogger: Logger = {
-        info: jest.fn(),
-    };
-
     describe('with caching enabled', () => {
         const rapidApi = new RapidApi({
             ...rapidApiOptions,
-            logger: mockLogger,
         });
 
         it('should cache a successful response', async () => {
@@ -68,9 +68,13 @@ describe('RapidApi Caching', () => {
         });
     });
 
-    describe.skip('with caching disabled', () => {
-        const rapidApi = new RapidApi({
+    describe('with caching disabled', () => {
+        const mockLoggerNocache: Logger = {
+            info: jest.fn(),
+        };
+        const rapidApiNoCache = new RapidApi({
             ...rapidApiOptions,
+            logger: mockLoggerNocache,
             cache: undefined,
         });
 
@@ -79,20 +83,20 @@ describe('RapidApi Caching', () => {
             axiosMock.onGet(uri, { params }).reply(200, response);
 
             // First call - no caching
-            await rapidApi.call({
+            await rapidApiNoCache.call({
                 method: 'get',
                 uri,
                 params,
             });
-            expect(mockLogger.info).not.toHaveBeenCalledWith('Cache miss', { cacheKey: expect.any(String) });
+            expect(mockLoggerNocache.info).not.toHaveBeenCalledWith('Cache miss', { cacheKey: expect.any(String) });
 
             // Second call - no caching
-            await rapidApi.call({
+            await rapidApiNoCache.call({
                 method: 'get',
                 uri,
                 params,
             });
-            expect(mockLogger.info).not.toHaveBeenCalledWith('Cache miss', { cacheKey: expect.any(String) });
+            expect(mockLoggerNocache.info).not.toHaveBeenCalledWith('Cache miss', { cacheKey: expect.any(String) });
         });
     });
 });

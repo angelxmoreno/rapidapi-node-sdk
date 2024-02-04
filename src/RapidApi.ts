@@ -56,11 +56,9 @@ export class RapidApi {
         return instance;
     }
 
-    protected log(message: string, data?: Record<string, unknown>): void {
+    protected log(message: string, data: Record<string, unknown> = {}): void {
         if (this.logger && data) {
             this.logger.info(message, data);
-        } else if (this.logger) {
-            this.logger.info(message);
         }
     }
 
