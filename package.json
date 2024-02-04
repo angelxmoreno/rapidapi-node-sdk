@@ -1,6 +1,6 @@
 {
     "name": "rapidapi-node-sdk",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "description": "An open-source Node.js SDK for interacting with RapidAPI’s diverse set of APIs, featuring built-in caching for improved performance.",
