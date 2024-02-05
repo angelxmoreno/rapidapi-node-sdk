@@ -58,5 +58,27 @@ describe('utils', () => {
 
             expect(result1).toBe(result2);
         });
+
+        it('should generate different cache keys for different domains', async () => {
+            const rapidApiKey = 'test-key';
+            const config1: AxiosRequestConfig = {
+                baseURL: 'https://api.test-domain.com',
+                method: 'get',
+                url: '/endpoint',
+                params: { foo: 'bar', baz: 'qux' },
+            };
+
+            const config2: AxiosRequestConfig = {
+                baseURL: 'https://api.other-domain.com',
+                method: 'get',
+                url: '/endpoint',
+                params: { foo: 'bar', baz: 'qux' },
+            };
+
+            const result1 = cacheKeyFromConfig(rapidApiKey, config1);
+            const result2 = cacheKeyFromConfig(rapidApiKey, config2);
+
+            expect(result1).not.toBe(result2);
+        });
     });
 });
