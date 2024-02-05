@@ -1,5 +1,13 @@
 # RapidAPI Node SDK
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/6c2d244bc57d9749aea2/maintainability)](https://codeclimate.com/github/angelxmoreno/rapidapi-node-sdk/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/6c2d244bc57d9749aea2/test_coverage)](https://codeclimate.com/github/angelxmoreno/rapidapi-node-sdk/test_coverage)
+[![codecov](https://codecov.io/gh/angelxmoreno/rapidapi-node-sdk/graph/badge.svg?token=AnABvDRM2T)](https://codecov.io/gh/angelxmoreno/rapidapi-node-sdk)
+[![Build on Main](https://github.com/angelxmoreno/rapidapi-node-sdk/actions/workflows/manual-build.yml/badge.svg)](https://github.com/angelxmoreno/rapidapi-node-sdk/actions/workflows/manual-build.yml)
+[![License](https://img.shields.io/github/license/angelxmoreno/rapidapi-node-sdk?label=License)](https://github.com/angelxmoreno/rapidapi-node-sdk/blob/main/LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/angelxmoreno/rapidapi-node-sdk?label=Last%20Commit)](https://github.com/angelxmoreno/rapidapi-node-sdk/commits/main)
+[![dependencies](https://img.shields.io/librariesio/release/npm/rapidapi-node-sdk?color=%23007a1f&style=flat-square)](https://libraries.io/npm/rapidapi-node-sdk)
+
 An open-source Node.js SDK for interacting with RapidAPI’s diverse set of APIs,
 featuring built-in caching for improved performance.
 
