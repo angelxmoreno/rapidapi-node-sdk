@@ -16,7 +16,7 @@ export const generateHash = (value: unknown): string => {
 
 export const cacheKeyFromConfig = (rapidApiKey: string, config: AxiosRequestConfig): string => {
     const methodShort = config.method ? config.method.slice(0, 2).toUpperCase() : 'UN';
-    const urlHash = generateHash(config.url);
+    const urlHash = generateHash(config.baseURL || '' + config.url);
     const paramsHash = generateHash(config.params);
 
     return `${generateHash(rapidApiKey)}-${methodShort}${urlHash}-${paramsHash}`;

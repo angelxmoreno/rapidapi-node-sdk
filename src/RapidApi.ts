@@ -63,7 +63,10 @@ export class RapidApi {
     }
 
     protected cacheKeyFromConfig(config: AxiosRequestConfig): string {
-        return cacheKeyFromConfig(this.rapidApiKey, config);
+        return cacheKeyFromConfig(this.rapidApiKey, {
+            ...config,
+            baseURL: this.baseUrl,
+        });
     }
 
     protected async handleRequest<Response = unknown>(config: AxiosRequestConfig): Promise<CallMethodReturn<Response>> {
