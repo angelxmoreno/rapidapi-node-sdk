@@ -103,7 +103,7 @@ refer to the [Keyv npm package](https://www.npmjs.com/package/keyv).
 
 ```javascript
 import { RapidApi } from 'rapidapi-node-sdk';
-import { Keyv } from 'keyv';
+import Keyv from 'keyv';
 
 // Create a new RapidApi instance with caching using the default in-memory cache
 const rapidApiWithCaching = new RapidApi({
